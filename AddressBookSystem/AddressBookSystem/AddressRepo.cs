@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using SqlCommand = System.Data.SqlClient.SqlCommand;
+using SqlDataReader = System.Data.SqlClient.SqlDataReader;
+
 namespace AddressBookSystem
 {
-	public class AddressRepo
-	{
+    public class AddressRepo
+    {
         //Give path for database connection
         public static string connectionString = "Server=127.0.0.1,1433;Database=AddressBookService;User Id=sa;Password=Valuetech@123";
         SqlConnection connection = new SqlConnection(connectionString);
@@ -94,7 +97,7 @@ namespace AddressBookSystem
         }
 
         //UC03-edit contact of particular person
-        public bool EditContact(string name,AddressModel contact)
+        public bool EditContact(string name, AddressModel contact)
         {
             SqlConnection connection = new SqlConnection(connectionString);
             try
@@ -142,10 +145,10 @@ namespace AddressBookSystem
                 {
                     string query = "delete from AddressBook where FirstName = 'Shubham' and LastName = 'Shaw'";
                     //Pass query to TSql
-                    SqlCommand command = new SqlCommand(query,connection);
+                    SqlCommand command = new SqlCommand(query, connection);
                     command.CommandType = CommandType.StoredProcedure;
                     string spName = "dbo.SplDeleteContact";
-                    SqlCommand command1 = new SqlCommand(spName,connection);
+                    SqlCommand command1 = new SqlCommand(spName, connection);
                     int result = command.ExecuteNonQuery();
                     if (result != 0)
                     {
@@ -155,7 +158,7 @@ namespace AddressBookSystem
                     {
                         Console.WriteLine("Not Updated!");
                     }
-                    return false;
+                    return true;
                 }
             }
             catch (Exception ex)
@@ -167,6 +170,25 @@ namespace AddressBookSystem
                 connection.Close();
             }
             return false;
+        }
+
+        //UC 5 - To Retrieve Person belonging to a City or State from the Address Book
+        public string PrintDataBasedOnCity(string city, string State)
+        {
+            string nameList = "";
+            //query to be executed
+            string query = @"select * from AddressBook where City =" + "'" + city + "' or State=" + "'" + State + "'";
+            SqlCommand command = new SqlCommand(query, this.connection);
+            connection.Open();
+            SqlDataReader sqlDataReader = command.ExecuteReader();
+            if (sqlDataReader.HasRows)
+            {
+                while (sqlDataReader.Read())
+                {
+                    nameList += sqlDataReader["FirstName"].ToString() + " ";
+                }
+            }
+            return nameList;
         }
     }
 }

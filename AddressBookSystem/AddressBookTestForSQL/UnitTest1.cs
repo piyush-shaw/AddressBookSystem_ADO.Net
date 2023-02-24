@@ -1,4 +1,6 @@
-﻿using AddressBookSystem;
+﻿using System.Net;
+using AddressBookSystem;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AddressBookTestForSQL;
 
@@ -42,5 +44,15 @@ public class UnitTest1
         AddressRepo repo = new AddressRepo();
         var result = repo.DeletePersonBasedonName();
         Assert.IsTrue(result);
+    }
+
+    //UC 5: To Retrieve Person belonging to a City or State from the Address Book
+    [TestMethod]
+    public void GivenRetrieveQuery_ReturnString()
+    {
+        AddressRepo repo = new AddressRepo();
+        string expected = "Ashwani Karma";
+        string actual = repo.PrintDataBasedOnCity("Raipur", "Chattisgarh");
+        Assert.AreEqual(expected, actual);
     }
 }
