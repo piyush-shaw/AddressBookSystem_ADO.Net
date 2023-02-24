@@ -47,3 +47,12 @@ AS
 	UPDATE AddressBook set FirstName = @FirstName, LastName =@LastName , Address = @Address, City =@City , State = @State, Zip =@Zip , PhoneNumber = @PhoneNumber, Email = @Email , Book_Name=@Book_Name , Contact_Type = @Contact_Type 
 	Where FirstName = @name;
 RETURN 0
+
+-- UC-04 SP for Delete contact
+CREATE PROCEDURE [dbo].[SplDeleteContact]
+@name varchar(255)
+AS
+	DELETE FROM AddressBook 
+	Where FirstName = @name
+RETURN 0
+

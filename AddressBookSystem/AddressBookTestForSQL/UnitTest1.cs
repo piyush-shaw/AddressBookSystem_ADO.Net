@@ -5,7 +5,7 @@ namespace AddressBookTestForSQL;
 [TestClass]
 public class UnitTest1
 {
-   
+   //UC 2: To insert value in table
     [TestMethod]
     public void TestMethod1()
     {
@@ -25,13 +25,22 @@ public class UnitTest1
         Assert.IsTrue(result);
     }
 
-    //UseCase 3: Modify Existing Contact using their name
+    //UC 3: Modify Existing Contact using their name
     [TestMethod]
     public void GivenUpdateQueryReturnOne()
     {
         AddressRepo repo = new AddressRepo();    
         AddressModel contact = new AddressModel();
         bool result = repo.EditContact("Piyush",contact);
+        Assert.IsTrue(result);
+    }
+
+    //UC 4: Delete person based on Name
+    [TestMethod]
+    public void DeletePersonBasedonName()
+    {
+        AddressRepo repo = new AddressRepo();
+        var result = repo.DeletePersonBasedonName();
         Assert.IsTrue(result);
     }
 }

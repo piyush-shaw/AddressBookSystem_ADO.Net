@@ -131,6 +131,43 @@ namespace AddressBookSystem
             }
             return false;
         }
+
+        //UC4 - Delete Contact using their name
+        public bool DeletePersonBasedonName()
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                using (this.connection)
+                {
+                    string query = "delete from AddressBook where FirstName = 'Shubham' and LastName = 'Shaw'";
+                    //Pass query to TSql
+                    SqlCommand command = new SqlCommand(query,connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    string spName = "dbo.SplDeleteContact";
+                    SqlCommand command1 = new SqlCommand(spName,connection);
+                    int result = command.ExecuteNonQuery();
+                    if (result != 0)
+                    {
+                        Console.WriteLine("Updated!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not Updated!");
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return false;
+        }
     }
 }
 
