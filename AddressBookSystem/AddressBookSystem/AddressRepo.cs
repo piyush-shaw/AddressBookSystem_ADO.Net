@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
-
 namespace AddressBookSystem
 {
 	public class AddressRepo
@@ -8,6 +8,8 @@ namespace AddressBookSystem
         //Give path for database connection
         public static string connectionString = "Server=127.0.0.1,1433;Database=AddressBookService;User Id=sa;Password=Valuetech@123";
         SqlConnection connection = new SqlConnection(connectionString);
+
+        //UC02 - To insert value in table
         public bool InsertIntoTable(AddressModel addressBook)
         {
             try
@@ -48,6 +50,84 @@ namespace AddressBookSystem
             finally
             {
                 this.connection.Close();
+            }
+            return false;
+        }
+
+        public bool GetContact(string name)
+        {
+            try
+            {
+                AddressModel addressBook = new AddressModel();
+                using (this.connection)
+                {
+                    string query = @"Select * from AddressBook;";
+                    SqlCommand cmd = new SqlCommand(query, this.connection);
+                    this.connection.Open();
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    if (dr.HasRows)
+                    {
+                        while (dr.Read())
+                        {
+                            addressBook.FirstName = Convert.ToString(dr["FirstName"]);
+                            addressBook.LastName = Convert.ToString(dr["LastName"]);
+                            addressBook.Address = Convert.ToString(dr["Address"] + " " + dr["City"] + " " + dr["State"] + " " + dr["zip"]);
+                            addressBook.PhoneNumber = Convert.ToInt64(dr["PhoneNumber"]);
+                            addressBook.Email = Convert.ToString(dr["Email"]);
+                            addressBook.Book_Name = Convert.ToString(dr["Book_Name"]);
+                            addressBook.Contact_Type = Convert.ToString(dr["ContactType"]);
+                            Console.WriteLine("{0} | {1} | {2} | {3} | {4} | {5} | {6}", addressBook.FirstName, addressBook.LastName, addressBook.Address, addressBook.PhoneNumber, addressBook.Email, addressBook.Book_Name, addressBook.Contact_Type);
+                            System.Console.WriteLine("\n");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return false;
+        }
+
+        //UC03-edit contact of particular person
+        public bool EditContact(string name,AddressModel contact)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                int result;
+                using (this.connection)
+                {
+                    string spName = "dbo.SpEditContact";
+                    SqlCommand command = new SqlCommand(spName, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@name", name);
+                    command.Parameters.AddWithValue("@FirstName", contact.FirstName);
+                    command.Parameters.AddWithValue("@LastName", contact.LastName);
+                    command.Parameters.AddWithValue("@Address", contact.Address);
+                    command.Parameters.AddWithValue("@City", contact.City);
+                    command.Parameters.AddWithValue("@State", contact.State);
+                    command.Parameters.AddWithValue("@Zip", contact.zip);
+                    command.Parameters.AddWithValue("@PhoneNumber", contact.PhoneNumber);
+                    command.Parameters.AddWithValue("@Email", contact.Email);
+                    command.Parameters.AddWithValue("@Book_Name", contact.Book_Name);
+                    command.Parameters.AddWithValue("@Contact_Type", contact.Contact_Type);
+                    connection.Open();
+                    result = command.ExecuteNonQuery();
+                }
+                return result == 1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                connection.Close();
             }
             return false;
         }

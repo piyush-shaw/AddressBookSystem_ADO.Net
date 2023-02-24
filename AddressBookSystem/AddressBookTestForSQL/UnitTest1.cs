@@ -5,6 +5,7 @@ namespace AddressBookTestForSQL;
 [TestClass]
 public class UnitTest1
 {
+   
     [TestMethod]
     public void TestMethod1()
     {
@@ -21,6 +22,16 @@ public class UnitTest1
         address.Book_Name = "Lawyer";
         address.Contact_Type = "Profession";
         var result = repo.InsertIntoTable(address);
+        Assert.IsTrue(result);
+    }
+
+    //UseCase 3: Modify Existing Contact using their name
+    [TestMethod]
+    public void GivenUpdateQueryReturnOne()
+    {
+        AddressRepo repo = new AddressRepo();    
+        AddressModel contact = new AddressModel();
+        bool result = repo.EditContact("Piyush",contact);
         Assert.IsTrue(result);
     }
 }
