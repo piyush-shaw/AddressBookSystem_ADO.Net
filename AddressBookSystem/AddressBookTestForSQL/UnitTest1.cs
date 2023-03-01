@@ -56,11 +56,23 @@ public class UnitTest1
         Assert.AreEqual(expected, actual);
     }
 
+    //UC 6 : Retrieve Count Person By City Or State
     [TestMethod]
     [DataRow("Found The Record SuccessFully")]
     public void GivenCountQuery_ReturnString(string expected)
     {
         var actual = AddressRepo.PrintCountByCityandState();
+        Assert.AreEqual(expected, actual);
+    }
+
+    //UC 7: Testing the sort contact by persons name to check if data is found or not
+    [TestMethod]
+    [DataRow("WestBengal", "Found The Record SuccessFully")]
+    [DataRow("Jharkhand", "Found The Record SuccessFully")]
+    [DataRow("Pondicherry", "No Record Found")]
+    public void GivenOrderByQueryReturnResult(string city, string expected)
+    {
+        var actual = AddressRepo.GetSortedCityContactByName(city);
         Assert.AreEqual(expected, actual);
     }
 }

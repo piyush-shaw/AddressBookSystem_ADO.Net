@@ -12,6 +12,8 @@ namespace AddressBookSystem
         public static string connectionString = "Server=127.0.0.1,1433;Database=AddressBookService;User Id=sa;Password=Valuetech@123";
         SqlConnection connection = new SqlConnection(connectionString);
 
+        public static AddressModel contact = new AddressModel();
+
         //UC02 - To insert value in table
         public bool InsertIntoTable(AddressModel addressBook)
         {
@@ -191,7 +193,7 @@ namespace AddressBookSystem
             return nameList;
         }
 
-        //UC6 - Method to retreive person by city or state from db(UC7)
+        //UC6 - Method to retreive person by city or state from db
         public static string PrintCountByCityandState()
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -225,6 +227,58 @@ namespace AddressBookSystem
             {
                 connection.Close();
             }
+        }
+
+        //UC7 - Method to retreive sorted person city records from db using name
+        public static string GetSortedCityContactByName(string city)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                //Open Connection
+                using (connection)
+                {
+                    string query = $"Select * From AddressBook Where City = '{city}' Order By FirstName";
+                    //Passing query to sqlcommand
+                    SqlCommand sqlCommand = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                    if (sqlDataReader.HasRows)
+                    {
+                        while (sqlDataReader.Read())
+                        {
+                            PrintContact(sqlDataReader);
+                        }
+                        return "Found The Record SuccessFully";
+                    }
+                    else
+                        return "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        //Method to print contact details
+        public static void PrintContact(SqlDataReader sqlDataReader)
+        {
+            contact.FirstName = Convert.ToString(sqlDataReader["FirstName"]);
+            contact.LastName = Convert.ToString(sqlDataReader["LastName"]);
+            contact.Address = Convert.ToString(sqlDataReader["Address"]);
+            contact.City = Convert.ToString(sqlDataReader["City"]);
+            contact.State = Convert.ToString(sqlDataReader["StateName"]);
+            contact.zip = Convert.ToInt64(sqlDataReader["zip"]);
+            contact.PhoneNumber = Convert.ToInt64(sqlDataReader["PhoneNum"]);
+            contact.Email = Convert.ToString(sqlDataReader["EmailId"]);
+            contact.Book_Name = Convert.ToString(sqlDataReader["BookName"]);
+            contact.Contact_Type = Convert.ToString(sqlDataReader["ContactType"]);
+            Console.WriteLine(contact);
         }
     }
 }
