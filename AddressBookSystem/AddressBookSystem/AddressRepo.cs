@@ -190,6 +190,42 @@ namespace AddressBookSystem
             }
             return nameList;
         }
+
+        //UC6 - Method to retreive person by city or state from db(UC7)
+        public static string PrintCountByCityandState()
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                //Open Connection
+                using (connection)
+                {
+                    string query = $"Select Count(*),State,City From AddressBook Group By State,City";
+                    //Passing query to sqlcommand
+                    SqlCommand sqlCommand = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                    if (sqlDataReader.HasRows)
+                    {
+                        while (sqlDataReader.Read())
+                        {
+                            Console.WriteLine("Count : {0} \tState : {1} \tCity : {2}", sqlDataReader[0], sqlDataReader[1], sqlDataReader[2]);
+                        }
+                        return "Found The Record SuccessFully";
+                    }
+                    else
+                        return "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }
 

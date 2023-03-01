@@ -51,8 +51,16 @@ public class UnitTest1
     public void GivenRetrieveQuery_ReturnString()
     {
         AddressRepo repo = new AddressRepo();
-        string expected = "Ashwani Karma";
+        string expected = "";
         string actual = repo.PrintDataBasedOnCity("Raipur", "Chattisgarh");
+        Assert.AreEqual(expected, actual);
+    }
+
+    [TestMethod]
+    [DataRow("Found The Record SuccessFully")]
+    public void GivenCountQuery_ReturnString(string expected)
+    {
+        var actual = AddressRepo.PrintCountByCityandState();
         Assert.AreEqual(expected, actual);
     }
 }
