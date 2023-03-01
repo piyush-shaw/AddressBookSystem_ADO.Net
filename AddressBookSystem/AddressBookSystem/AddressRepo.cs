@@ -265,6 +265,42 @@ namespace AddressBookSystem
             }
         }
 
+        //UC 8 : Method to retreive count by contact type from db
+        public static string GetCountByContactType()
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                //Open Connection
+                using (connection)
+                {
+                    string query = $"Select Count(*) As NumOfContact,Contact_Type From AddressBook Group By Contact_Type";
+                    //Passing query to sqlcommand
+                    SqlCommand sqlCommand = new SqlCommand(query, connection);
+                    connection.Open();
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+                    if (sqlDataReader.HasRows)
+                    {
+                        while (sqlDataReader.Read())
+                        {
+                            Console.WriteLine("Count : {0} \tNumOfContact : {1}", sqlDataReader[0], sqlDataReader[1]);
+                        }
+                        return "Found The Record SuccessFully";
+                    }
+                    else
+                        return "No Record Found";
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         //Method to print contact details
         public static void PrintContact(SqlDataReader sqlDataReader)
         {

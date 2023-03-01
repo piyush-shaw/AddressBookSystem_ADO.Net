@@ -75,4 +75,13 @@ public class UnitTest1
         var actual = AddressRepo.GetSortedCityContactByName(city);
         Assert.AreEqual(expected, actual);
     }
+
+    //UC 8: Testing the count contact by contact type to check if data is found or not
+    [TestMethod]
+    [DataRow("Found The Record SuccessFully")]
+    public void GivenCountByTypeQueryReturnResult(string expected)
+    {
+        var actual = AddressRepo.GetCountByContactType();
+        Assert.AreEqual(expected, actual);
+    }
 }
